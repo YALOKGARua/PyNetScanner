@@ -1,0 +1,46 @@
+0050C2	IEEE Registration Authority
+00A0C6	Qualcomm Inc.
+00A0C9	Intel Corporation
+001122	Cisco Systems, Inc
+0080C8	D-Link Systems, Inc
+000C29	VMware, Inc.
+000E7F	Hewlett Packard
+001B63	Apple, Inc.
+001D0F	TP-LINK Technologies Co.,Ltd.
+001E8C	ASUSTek Computer Inc.
+002272	American Micro-Fuel Device Corp.
+002483	LG Electronics
+002655	Hewlett Packard
+00259C	Cisco-Linksys, LLC
+0026B0	Apple, Inc.
+002709	Nintendo Co., Ltd.
+00E04C	Realtek Semiconductor Corp.
+08002B	Digital Equipment Corporation
+080027	PCS Computer Systems GmbH
+3497F6	ASUSTek Computer Inc.
+40B076	ASUSTek Computer Inc.
+44E45D	ARRIS Group, Inc.
+5855CA	Apple, Inc.
+5C260A	Dell Inc.
+5C6B32	Texas Instruments
+687251	Ubiquiti Networks Inc.
+6C4008	Apple, Inc.
+6CF37F	Aruba Networks
+74D435	Giga-Byte Technology Co., Ltd.
+78E3B5	Hewlett Packard
+7CB27D	Intel Corporate
+7CEDD8	Microsoft Corporation
+88C663	Apple, Inc.
+8C89A5	Micro-Star INT'L CO., LTD
+9C4FDA	Apple, Inc.
+A4C494	Intel Corporate
+AC7289	Intel Corporate
+B8E856	Apple, Inc.
+C417FE	Hon Hai Precision Ind. Co.,Ltd.
+C81479	Samsung Electronics Co.,Ltd
+CC08E0	Apple, Inc.
+D07E28	Hewlett Packard
+D4BE97	Cisco Systems, Inc
+DC4A3E	Hewlett Packard
+E48D8C	Routerboard.com
+F81EDF	Apple, Inc. 
