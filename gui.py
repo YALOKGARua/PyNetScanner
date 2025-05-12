@@ -146,13 +146,25 @@ class NetworkScannerGUI:
             prefix = ipaddress.IPv4Network(f'0.0.0.0/{netmask}').prefixlen
             self.network_label.config(text=f"Network: {network}/{prefix}")
             
-            gateways = netifaces.gateways()
-            if 'default' in gateways and netifaces.AF_INET in gateways['default']:
-                gateway = gateways['default'][netifaces.AF_INET][0]
-                self.gateway_label.config(text=f"Gateway: {gateway}")
+            try:
+                gateways = netifaces.gateways()
+                if 'default' in gateways and netifaces.AF_INET in gateways['default']:
+                    gateway = gateways['default'][netifaces.AF_INET][0]
+                    self.gateway_label.config(text=f"Gateway: {gateway}")
+                else:
+                    self.gateway_label.config(text="Gateway: Not detected")
+            except:
+                self.gateway_label.config(text="Gateway: Not detected")
         else:
-            self.network_label.config(text="Network: Detection failed")
+            self.network_label.config(text="Network: Not detected")
             self.gateway_label.config(text="Gateway: Not detected")
+            messagebox.showwarning("Network Detection", 
+                "Could not automatically detect network.\n\n"
+                "Please ensure:\n"
+                "1. Your network adapter is enabled\n"
+                "2. You have a valid IP address\n"
+                "3. You are connected to a network\n\n"
+                "You may need to run this application as administrator.")
 
     def start_arp_scan(self):
         if self.is_scanning:

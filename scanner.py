@@ -15,6 +15,7 @@ import string
 import nmap
 import psutil
 from datetime import datetime
+import socket
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -29,20 +30,58 @@ class NetworkScanner:
     def get_network_info(self) -> Tuple[str, str]:
         try:
             interfaces = psutil.net_if_addrs()
-            gateways = netifaces.gateways()
-            default_gateway = gateways['default'][netifaces.AF_INET][0]
-            default_interface = gateways['default'][netifaces.AF_INET][1]
-            
+            try:
+                gateways = netifaces.gateways()
+                if 'default' in gateways and netifaces.AF_INET in gateways['default']:
+                    default_gw = gateways['default'][netifaces.AF_INET][0]
+                    default_iface = gateways['default'][netifaces.AF_INET][1]
+                    if default_iface in interfaces:
+                        for addr in interfaces[default_iface]:
+                            if addr.family == psutil.AF_INET:
+                                ip = addr.address
+                                netmask = addr.netmask
+                                if ip and netmask and not ip.startswith('127.'):
+                                    network = ipaddress.IPv4Network(f"{ip}/{netmask}", strict=False)
+                                    logging.info(f"Found network on default interface: {network}")
+                                    return str(network.network_address), str(network.netmask)
+            except Exception as e:
+                logging.warning(f"Could not get default gateway info: {e}")
             for iface, addrs in interfaces.items():
-                if iface == default_interface:
-                    for addr in addrs:
-                        if addr.family == psutil.AF_INET:
-                            ip = addr.address
-                            netmask = addr.netmask
-                            network = ipaddress.IPv4Network(f"{ip}/{netmask}", strict=False)
-                            logging.info(f"Network: {network.network_address}/{network.netmask} (Gateway: {default_gateway})")
-                            return str(network.network_address), str(network.netmask)
+                for addr in addrs:
+                    if addr.family == psutil.AF_INET:
+                        ip = addr.address
+                        netmask = addr.netmask
+                        if ip and netmask and not ip.startswith('127.') and not ip.startswith('169.254'):
+                            try:
+                                network = ipaddress.IPv4Network(f"{ip}/{netmask}", strict=False)
+                                logging.info(f"Found network on interface {iface}: {network}")
+                                return str(network.network_address), str(network.netmask)
+                            except Exception as e:
+                                logging.warning(f"Invalid network on interface {iface}: {e}")
+                                continue
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                s.connect(("8.8.8.8", 80))
+                ip = s.getsockname()[0]
+                s.close()
+                if ip.startswith('192.168.'):
+                    netmask = '255.255.255.0'
+                elif ip.startswith('10.'):
+                    netmask = '255.0.0.0'
+                elif ip.startswith('172.'):
+                    netmask = '255.240.0.0'
+                else:
+                    netmask = '255.255.255.0'
+                
+                network = ipaddress.IPv4Network(f"{ip}/{netmask}", strict=False)
+                logging.info(f"Found network using socket method: {network}")
+                return str(network.network_address), str(network.netmask)
+            except Exception as e:
+                logging.error(f"Socket method failed: {e}")
+            
+            logging.error("No valid network interface found")
             return "", ""
+            
         except Exception as e:
             logging.error(f"Network detection error: {e}")
             return "", ""
